@@ -1,11 +1,10 @@
 Package: IntegrationScore
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Toolbox For Evaluating Batch Correction Methods
 Version: 0.1.0
-Author: Who wrote it
+Author: Elias Williams
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: The objective of this R package is to allow researchers working with scRNA-seq data to compare the effectiveness of batch correction methods.
+License: MIT
 Encoding: UTF-8
 LazyData: true
