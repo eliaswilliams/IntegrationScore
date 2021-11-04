@@ -12,5 +12,6 @@ LazyData: true
 Imports: 
     dplyr,
     ggplot2,
+    stats,
     Seurat
 RoxygenNote: 7.1.2

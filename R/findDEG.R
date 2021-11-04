@@ -25,10 +25,10 @@ findDEG <- function(srtObjPre, srtObjPost, batchNames, clusterVars, minPct, logF
         batch2Post <- subset(srtObjPost, subset = batch==batchNames[2])
 
         # make sure objects' idents are the clusterVar
-        Idents(batch1Pre) <- clusterVars[1]
-        Idents(batch2Pre) <- clusterVars[2]
-        Idents(batch1Post) <- clusterVars[1]
-        Idents(batch2Post) <- clusterVars[2]
+        batch1Pre <- Seurat::SetIdent(batch1Pre, clusterVars[1])
+        batch2Pre <- Seurat::SetIdent(batch2Pre, clusterVars[2])
+        batch1Post <- Seurat::SetIdent(batch1Post, clusterVars[1])
+        batch2Post <- Seurat::SetIdent(batch2Post, clusterVars[2])
 
         # find DEGs for all subsets using the given parameters
         batch1PreDEG = Seurat::FindAllMarkers(batch1Pre, min.pct=minPct,
@@ -41,18 +41,18 @@ findDEG <- function(srtObjPre, srtObjPost, batchNames, clusterVars, minPct, logF
                                                logfc.threshold=logFCThresh)
 
         # build data frame
-        batch1PreDEG = batch1PreDEG %>% select(gene, cluster,
+        batch1PreDEG = dplyr::select(batch1PreDEG, gene, cluster,
                                                avg_log2FC_pre=avg_log2FC)
-        batch2PreDEG = batch2PreDEG %>% select(gene, cluster,
+        batch2PreDEG = dplyr::select(batch2PreDEG, gene, cluster,
                                                avg_log2FC_pre=avg_log2FC)
-        batch1PostDEG = batch1PostDEG %>% select(gene, cluster,
+        batch1PostDEG = dplyr::select(batch1PostDEG, gene, cluster,
                                                  avg_log2FC_post=avg_log2FC)
-        batch2PostDEG = batch2PostDEG %>% select(gene, cluster,
+        batch2PostDEG = dplyr::select(batch2PostDEG, gene, cluster,
                                                  avg_log2FC_post=avg_log2FC)
 
-        batch1DEG = inner_join(batch1PreDEG, batch1PostDEG,
+        batch1DEG = dplyr::inner_join(batch1PreDEG, batch1PostDEG,
                                by=c("cluster", "gene"))
-        batch2DEG = inner_join(batch1PostDEG, batch2PostDEG,
+        batch2DEG = dplyr::inner_join(batch1PostDEG, batch2PostDEG,
                                by=c("cluster", "gene"))
 
         # calculate log2FC delta

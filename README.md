@@ -8,6 +8,8 @@
 
 ## Description
 
+\[DESCRIBE WHAT A BATCH EFFECT IS, STATE ASSUMPTIONS\]
+
 The objective of IntegrationScore is to allow researchers working with
 scRNA-seq data to compare the effectiveness of batch correction
 methods.Several R packages exist that score batch effects in a given
