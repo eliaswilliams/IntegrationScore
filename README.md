@@ -82,6 +82,12 @@ browseVignettes("IntegrationScore")
 
 ## Contributions
 
+The author of this package is Elias Williams. All functions make use of
+the Seurat library for single-cell analysis. ggplot2 is used for
+plotting functions. Seurat’s integration vignette is borrowed from in
+this package’s vignette, and it is attributed there. The vignette also
+makes use of a sample data set from the SeuratData package.
+
 ## References
 
 Büttner, M., Miao, Z., Wolf, F.A. et al. (2019) A test metric for
