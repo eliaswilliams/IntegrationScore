@@ -1,0 +1,117 @@
+---
+title: "ifnb_walkthrough"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ifnb_walkthrough}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(IntegrationScore)
+```
+
+This is a vignette showing how to use IntegrationScore. In this vignette we 
+use the ifnb scRNA-seq example data set sourced from the SeuratData package from the 
+Satija Lab. (https://github.com/satijalab/seurat-data)
+
+Integration steps taken from Seurat's vignette: 
+https://satijalab.org/seurat/articles/integration_introduction.html
+
+
+```{r load packages}
+library(SeuratData)
+library(Seurat)
+library(ggplot2)
+library(dplyr)
+library(kBET)
+```
+
+```{r}
+SeuratData::InstallData("ifnb")
+```
+
+## Spliting the Seurat Object into Two Batches and Clustering Independently
+```{r}
+# split the dataset into a list of two seurat objects (stim and CTRL)
+ifnb_split <- SplitObject(ifnb, split.by = "stim")
+
+# cluster each batch independently 
+ifnb_split <- lapply(X = ifnb_split, FUN = function(x) {
+        x <- NormalizeData(x)
+        x <- FindVariableFeatures(x, selection.method="vst", nfeatures=3000)
+        x <- ScaleData(x, features=VariableFeatures(object=x))
+        x <- RunPCA(x, npcs=100, verbose = FALSE)
+        x <- FindNeighbors(x, dims=1:20)
+        x <- FindClusters(x, resolution = 0.3)
+})
+
+# make sure the cluster names are distinct beteween batches
+levels(ifnb_split$CTRL@meta.data[["seurat_clusters"]]) = paste0(levels(ifnb_split$CTRL@meta.data[["seurat_clusters"]]), "_CTRL")
+levels(ifnb_split$STIM@meta.data[["seurat_clusters"]]) = paste0(levels(ifnb_split$STIM@meta.data[["seurat_clusters"]]), "_STIM")
+
+```
+
+## Using Seurat's Built-in Integration Method to Batch Correct
+```{r}
+# select features that are repeatedly variable across batches for integration
+features <- SelectIntegrationFeatures(object.list = ifnb_split)
+
+anchors <- FindIntegrationAnchors(object.list = ifnb_split, anchor.features = features)
+
+ifnb_corrected <- IntegrateData(anchorset = anchors)
+DefaultAssay(ifnb_corrected) <- "integrated"
+
+ifnb_split_corrected <- SplitObject(ifnb_corrected, split.by = "stim")
+```
+
+## kBET
+```{r}
+ifnb_merged_uncorrected <- merge(x=ifnb_split$CTRL, y=ifnb_split$STIM)
+
+ifnb_merged_uncorrected_sub <- subset(ifnb_merged_uncorrected, cells = sample(Cells(ifnb_merged_uncorrected), 1000))
+
+pre_count_mtx <- t(Seurat::GetAssayData(object = ifnb_merged_uncorrected_sub, slot = "scale.data"))
+pre_metadata_df <- unlist(ifnb_merged_uncorrected_sub$stim, use.names=FALSE)
+
+ifnb_corrected_sub <- subset(ifnb_corrected, cells = sample(Cells(ifnb_corrected), 1000))
+
+post_count_mtx <- t(Seurat::GetAssayData(object = ifnb_corrected_sub, slot = "scale.data"))
+post_metadata_df <-ifnb_corrected_sub$stim
+
+pre_kbet_estimate <- kBET::kBET(pre_count_mtx, pre_metadata_df)
+post_kbet_estimate <- kBET::kBET(post_count_mtx, post_metadata_df)
+
+```
+
+## Running findDEG
+```{r}
+deg_df <- findDEG(ifnb_list, ifnb_split_corrected, clusterVars = c('seurat_clusters','seurat_clusters'), logFCThresh=1.5)
+```
+
+## Plotting DEG 
+
+
+```{r Plotting Genes with Top Delta}
+plotDelta(deg_df, 16) 
+```
+
+## Outlier Scores
+```{r}
+plotCorrByCutoff(deg_df, 100, estimate = "spearman", byCluster = T)
+```
+
+
+## UMAP Plots
+
+```{r}
+plotUMAP(ifnb_split, ifnb_corrected, colorBy="stim", nFeatures=500, nPC=10)
+```
+

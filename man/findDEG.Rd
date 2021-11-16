@@ -4,14 +4,23 @@
 \alias{findDEG}
 \title{Calculates the Pre/Post Batch Correction Differentially Expressed Genes}
 \usage{
-findDEG(srtObjPre, srtObjPost, batchNames, clusterVars, minPct, logFCThresh)
+findDEG(
+  srtObjPre,
+  srtObjPost,
+  batchVar,
+  clusterVars,
+  minPct = 0.15,
+  logFCThresh = 1.5
+)
 }
 \arguments{
-\item{srtObjPre}{Seurat object of the uncorrected data}
+\item{srtObjPre}{Named list of length 2 of 2 Seurat objects of the
+uncorrected data split by batch, or single Seurat object to be split}
 
-\item{srtObjPost}{Seurat object of the corrected data}
+\item{srtObjPost}{Named list of length 2 of 2 Seurat objects of the corrected
+data split by batch, or single Seurat object to be split}
 
-\item{batchNames}{character vector of length 2 with the batch names}
+\item{batchVar}{string of the batch variable column name}
 
 \item{clusterVars}{character vector of the cluster columns in Seurat objects,
 these must be clusters obtained prior to batch correction
