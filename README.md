@@ -6,11 +6,6 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-## TODO
-
--   pivot to outlier detection
--   explain why DEGs should be somewhat correlated
-
 ## Description
 
 Biological data are obtained using different instruments, by different
@@ -89,25 +84,18 @@ browseVignettes("IntegrationScore")
 
 ## References
 
-Hoffman, P. (2021) Introduction to scRNA-seq. integration
+Büttner, M., Miao, Z., Wolf, F.A. et al. (2019) A test metric for
+assessing single-cell RNA-seq batch correction. Nat Methods 16, 43–49.
+<https://doi.org/10.1038/s41592-018-0254-1>
+
+Hoffman, P. (2021) Satija Lab. Introduction to scRNA-seq integration.
 <https://satijalab.org/seurat/articles/integration_introduction.html>
 
-@Article{, author = {Yuhan Hao and Stephanie Hao and Erica
-Andersen-Nissen and William M. Mauck III and Shiwei Zheng and Andrew
-Butler and Maddie J. Lee and Aaron J. Wilk and Charlotte Darby and
-Michael Zagar and Paul Hoffman and Marlon Stoeckius and Efthymia
-Papalexi and Eleni P. Mimitou and Jaison Jain and Avi Srivastava and Tim
-Stuart and Lamar B. Fleming and Bertrand Yeung and Angela J. Rogers and
-Juliana M. McElrath and Catherine A. Blish and Raphael Gottardo and
-Peter Smibert and Rahul Satija}, title = {Integrated analysis of
-multimodal single-cell data}, journal = {Cell}, year = {2021}, doi =
-{10.1016/j.cell.2021.04.048}, url =
-{<https://doi.org/10.1016/j.cell.2021.04.048>}, }
-
+Satija, R. (2021) Satija Lab. Seurat Data R Package.
 <https://github.com/satijalab/seurat-data>
-<https://github.com/theislab/kBET> Wickham, H. and Bryan, J. (2019). R
-Packages (2nd edition). Newton, Massachusetts: O’Reilly Media.
-<https://r-pkgs.org/>
+
+Wickham, H. and Bryan, J. (2019). R Packages (2nd edition). Newton,
+Massachusetts: O’Reilly Media. <https://r-pkgs.org/>
 
 ## Acknowledgements
 
