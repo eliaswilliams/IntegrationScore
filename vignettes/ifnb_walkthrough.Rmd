@@ -16,17 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(IntegrationScore)
-```
-
-This is a vignette showing how to use IntegrationScore. In this vignette we 
-use the ifnb scRNA-seq example data set sourced from the SeuratData package from the 
-Satija Lab. (https://github.com/satijalab/seurat-data)
-
-Integration steps taken from Seurat's vignette: 
-https://satijalab.org/seurat/articles/integration_introduction.html
-
-
-```{r load packages}
 library(SeuratData)
 library(Seurat)
 library(ggplot2)
@@ -34,15 +23,39 @@ library(dplyr)
 library(kBET)
 ```
 
-```{r}
+This is a vignette showing how to use IntegrationScore. In this vignette we 
+use the ifnb scRNA-seq example data set sourced from the SeuratData package from 
+the Satija Lab. (https://github.com/satijalab/seurat-data)
+
+Integration steps taken from Seurat's vignette: 
+https://satijalab.org/seurat/articles/integration_introduction.html
+
+# Set Up
+
+We will be using the interferon beta treated PBMC data set from Seurat Data. 
+
+
+```{r load the data set}
 SeuratData::InstallData("ifnb")
 ```
 
 ## Spliting the Seurat Object into Two Batches and Clustering Independently
+
+This data set consists of two group of PBMC cells. One group was treated with 
+interferon beta (STIM group) the other was not (CTRL group). We begin our 
+analysis by first splitting the Seurat object by the "stim" variable, which 
+puts our cells into two groups: "STIM" and "CTRL". These will be our two batches. 
+
 ```{r}
 # split the dataset into a list of two seurat objects (stim and CTRL)
 ifnb_split <- SplitObject(ifnb, split.by = "stim")
+```
 
+Now we will go through standard scRNA-seq pre-processing functions, culminating 
+in clustering. It is important that we cluster each batch independently as we 
+will be comparing each batch to itself in this analysis. 
+
+```{r}
 # cluster each batch independently 
 ifnb_split <- lapply(X = ifnb_split, FUN = function(x) {
         x <- NormalizeData(x)
@@ -53,65 +66,91 @@ ifnb_split <- lapply(X = ifnb_split, FUN = function(x) {
         x <- FindClusters(x, resolution = 0.3)
 })
 
-# make sure the cluster names are distinct beteween batches
+# make sure the cluster names are distinct between batches
 levels(ifnb_split$CTRL@meta.data[["seurat_clusters"]]) = paste0(levels(ifnb_split$CTRL@meta.data[["seurat_clusters"]]), "_CTRL")
 levels(ifnb_split$STIM@meta.data[["seurat_clusters"]]) = paste0(levels(ifnb_split$STIM@meta.data[["seurat_clusters"]]), "_STIM")
-
 ```
 
 ## Using Seurat's Built-in Integration Method to Batch Correct
+
+Now we will run the built in batch correction method in Seurat v4. These steps 
+were taken directly from their vignette. 
+https://satijalab.org/seurat/articles/integration_introduction.html
 ```{r}
 # select features that are repeatedly variable across batches for integration
 features <- SelectIntegrationFeatures(object.list = ifnb_split)
 
+# find anchors for integration
 anchors <- FindIntegrationAnchors(object.list = ifnb_split, anchor.features = features)
 
+# run correction alg
 ifnb_corrected <- IntegrateData(anchorset = anchors)
+
+# make sure we are using right assay
 DefaultAssay(ifnb_corrected) <- "integrated"
 
+# split corrected object to mirror uncorrected object
 ifnb_split_corrected <- SplitObject(ifnb_corrected, split.by = "stim")
 ```
 
-## kBET
-```{r}
-ifnb_merged_uncorrected <- merge(x=ifnb_split$CTRL, y=ifnb_split$STIM)
+# Using IntegrationScore
 
-ifnb_merged_uncorrected_sub <- subset(ifnb_merged_uncorrected, cells = sample(Cells(ifnb_merged_uncorrected), 1000))
+## Plotting UMAPs
 
-pre_count_mtx <- t(Seurat::GetAssayData(object = ifnb_merged_uncorrected_sub, slot = "scale.data"))
-pre_metadata_df <- unlist(ifnb_merged_uncorrected_sub$stim, use.names=FALSE)
+As a first step it is often useful to see how the batch correction has moved our 
+data points around in some embedding space. UMAP is an excellent way to show our 
+high dimensional gene expression data in two-dimensions. Here we run plotUMAP
+to see a before and after look at our data.
 
-ifnb_corrected_sub <- subset(ifnb_corrected, cells = sample(Cells(ifnb_corrected), 1000))
-
-post_count_mtx <- t(Seurat::GetAssayData(object = ifnb_corrected_sub, slot = "scale.data"))
-post_metadata_df <-ifnb_corrected_sub$stim
-
-pre_kbet_estimate <- kBET::kBET(pre_count_mtx, pre_metadata_df)
-post_kbet_estimate <- kBET::kBET(post_count_mtx, post_metadata_df)
-
+```{r plotUMAP}
+plotUMAP(ifnb_split, ifnb_corrected, colorBy="stim", nFeatures=500, nPC=10)
 ```
 
 ## Running findDEG
-```{r}
+
+Now that we have an integration to score... let's score it!
+
+First we run findDEG to find the top differentially expressed genes between 
+clusters. We find the DEGs in both the corrected and uncorrected data sets. We 
+will then use the results as a foundation of our evaluation. clusterVars 
+indicated the clusters to use in each batch. logFCThresh is the cutoff log2FC.
+
+```{r findDEG}
 deg_df <- findDEG(ifnb_list, ifnb_split_corrected, clusterVars = c('seurat_clusters','seurat_clusters'), logFCThresh=1.5)
+head(deg_df)
 ```
+Differentially expressed genes are measured in log2(fold change). For example, 
+we may have an entry in our dataframe for CD4 in cluster 0 with a log2FC of 3. 
+This would tell us that the gene expression for CD4 is 2**3 TIMES GREATER in 
+cluster 0 compared to the average expression in other clusters. Cool! 
 
-## Plotting DEG 
+## Plotting DEG Deltas 
 
+Now that we have our DEG dataframe, we are ready to see how Seurat's batch 
+correction algorithm effects the gene expressions in our data set.
 
-```{r Plotting Genes with Top Delta}
+Here we run plotDelta to see how the change in logFC is distributed across 
+batch. We also get to see some of the most changed genes and how their deltas 
+are distrubuted across clusters.
+
+```{r plotDelta}
 plotDelta(deg_df, 16) 
 ```
 
 ## Outlier Scores
-```{r}
-plotCorrByCutoff(deg_df, 100, estimate = "spearman", byCluster = T)
+
+Now that we've seen some delta plots, let's take a look at some correlations. 
+plotCorrByCutoff gives us an easy way to see how the pre/post correction 
+correlation between the differential expression of our genes changes as we 
+consider more or less genes. The cutoff value in these plots can be interpreted 
+as the number of top genes (ordered by the pre correction log2FC) we consider 
+when calculating the correlation. Try setting byCluster to True to see an even 
+more fine-grained look.
+
+```{r plotCorrByCutoff}
+plotCorrByCutoff(deg_df, granularity = 100, estimate = "spearman", byCluster = F)
 ```
 
 
-## UMAP Plots
 
-```{r}
-plotUMAP(ifnb_split, ifnb_corrected, colorBy="stim", nFeatures=500, nPC=10)
-```
 

@@ -13,17 +13,17 @@
 
 ## Description
 
-When biological data are obtained using different instruments, by
-different researchers, or under other different conditions,
-non-biological variation is introduced into the data set. This
-non-biologically relevant variance is called a batch effect.
+Biological data are obtained using different instruments, by different
+researchers, or under other different conditions. As a result
+non-biological variation between data sets is inevitable. This
+non-biologically (technical) variance is called a batch effect.
 
 When analyzing a data set with potential batch effects, one must be
-careful to first remove as much of this effect as possible. The process
-of removing batch effects is referred to as batch correction. If proper
-batch correction is not applied then the results of any downstream
-analyses performed may be useless, since there is now way for these
-downstream tasks to distinguish between real biological signal and
+careful to first remove as much of this variation as possible. The
+process of removing batch effects is referred to as batch correction. If
+proper batch correction is not applied then the results of any
+downstream analyses performed may be useless, since there is now way for
+these downstream tasks to distinguish between real biological signal and
 batch-effect-related noise.
 
 On the other hand, it is also possible to over batch correct and
@@ -43,11 +43,12 @@ The objective of IntegrationScore is to allow researchers working with
 scRNA-seq data to compare the effectiveness of batch correction methods
 using a different measure. That measure being: in a given batch, are the
 differentiated expressed genes (DEGs) between clusters somewhat
-invariant under the batch correction method? (i.e. the list of top DEGs
-should not be significantly altered by batch correction) This R package
-enables scientists to quickly perform this sanity check as well as
-implement other additional metrics and interpret the results using clear
-visualizations.
+invariant under the batch correction method? A measure such as this
+gives researchers an idea of which genes were significantly changed by
+the correction algorithm. Additionally, this measure can be used to get
+a general picture of how the correction algorithm changed each cluster.
+This R package enables scientists to quickly perform this sanity check
+and interpret the results using clear visualizations.
 
 IntegrationScore was developed on a Mac using R 4.1.1.
 
@@ -66,12 +67,47 @@ To run the shinyApp: Under construction
 
 ## Overview
 
+``` r
+ls("package:IntegrationScore")
+```
+
+This package contains 5 functions available to users. It is recommended
+that users start by calling findDEG which returns a dataframe of
+differential expressed genes (DEGs) in your Seurat objects. corrDEG is
+then used to calculate the correlation of the DEGs under batch
+correction. The remaining three functions are for plotting. plotDelta
+returns a plot that illustrates change in log2FC (delta) under the
+correction algorithm. plotCorrByCutoff shows how the correlation of the
+DEGs changes as you consider more or less DEGs. And finally, plotUMAP
+plots the UMAP reduction pre and post batch correction.
+
+``` r
+browseVignettes("IntegrationScore")
+```
+
 ## Contributions
 
 ## References
 
+Hoffman, P. (2021) Introduction to scRNA-seq. integration
 <https://satijalab.org/seurat/articles/integration_introduction.html>
+
+@Article{, author = {Yuhan Hao and Stephanie Hao and Erica
+Andersen-Nissen and William M. Mauck III and Shiwei Zheng and Andrew
+Butler and Maddie J. Lee and Aaron J. Wilk and Charlotte Darby and
+Michael Zagar and Paul Hoffman and Marlon Stoeckius and Efthymia
+Papalexi and Eleni P. Mimitou and Jaison Jain and Avi Srivastava and Tim
+Stuart and Lamar B. Fleming and Bertrand Yeung and Angela J. Rogers and
+Juliana M. McElrath and Catherine A. Blish and Raphael Gottardo and
+Peter Smibert and Rahul Satija}, title = {Integrated analysis of
+multimodal single-cell data}, journal = {Cell}, year = {2021}, doi =
+{10.1016/j.cell.2021.04.048}, url =
+{<https://doi.org/10.1016/j.cell.2021.04.048>}, }
+
 <https://github.com/satijalab/seurat-data>
+<https://github.com/theislab/kBET> Wickham, H. and Bryan, J. (2019). R
+Packages (2nd edition). Newton, Massachusetts: O’Reilly Media.
+<https://r-pkgs.org/>
 
 ## Acknowledgements
 
