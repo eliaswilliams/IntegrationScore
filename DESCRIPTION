@@ -18,7 +18,6 @@ Imports:
     ggpubr
 RoxygenNote: 7.1.2
 Remotes: 
-    url::https://github.com/theislab/kBET,
     satijalab/seurat-data
 Suggests: 
     rmarkdown,
