@@ -6,7 +6,7 @@ Author: Elias Williams
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: The objective of this R package is to allow researchers working with scRNA-seq data to compare the effectiveness of batch correction methods.
 License: MIT + file LICENSE
-Depends: R (>= 3.1.0)
+Depends: R (>= 3.5.0)
 Encoding: UTF-8
 LazyData: true
 Imports: 
