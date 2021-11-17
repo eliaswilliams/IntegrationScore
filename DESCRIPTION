@@ -14,7 +14,6 @@ Imports:
     ggplot2,
     stats,
     Seurat,
-    kBET (>= 0.99.6),
     SeuratData (>= 0.2.1),
     ggpubr
 RoxygenNote: 7.1.2
