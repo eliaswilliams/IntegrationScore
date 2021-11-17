@@ -80,6 +80,8 @@ plots the UMAP reduction pre and post batch correction.
 browseVignettes("IntegrationScore")
 ```
 
+![overview image](overview.png)
+
 ## Contributions
 
 The author of this package is Elias Williams. All functions make use of
