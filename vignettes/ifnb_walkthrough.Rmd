@@ -20,7 +20,6 @@ library(SeuratData)
 library(Seurat)
 library(ggplot2)
 library(dplyr)
-library(kBET)
 ```
 
 This is a vignette showing how to use IntegrationScore. In this vignette we 
@@ -149,7 +148,7 @@ when calculating the correlation. Try setting byCluster to True to see an even
 more fine-grained look.
 
 ```{r plotCorrByCutoff}
-plotCorrByCutoff(deg_df, granularity = 100, estimate = "spearman", byCluster = F)
+plotCorrByCutoff(deg_df, granularity = 100, estimate = "spearman", byCluster = T)
 ```
 
 

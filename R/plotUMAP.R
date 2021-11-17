@@ -10,9 +10,9 @@
 #'
 #' @examples
 #' library(Seurat)
-#' data("ifbn_split")
+#' data("ifnb_split")
 #' data("ifnb_split_corrected")
-#' plotUMAP(ifbn_split, ifnb_split_corrected, colorBy="stim")
+#' plotUMAP(ifnb_split, ifnb_split_corrected, colorBy="stim")
 #'
 #' @export
 plotUMAP <- function(srtObjPre, srtObjPost, colorBy,  nFeatures=2000, nPC=20) {
