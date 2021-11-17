@@ -47,6 +47,7 @@ analysis by first splitting the Seurat object by the "stim" variable, which
 puts our cells into two groups: "STIM" and "CTRL". These will be our two batches. 
 
 ```{r}
+ifnb = subset(x = ifnb, downsample = 10000)
 # split the dataset into a list of two seurat objects (stim and CTRL)
 ifnb_split <- SplitObject(ifnb, split.by = "stim")
 ```
@@ -116,7 +117,7 @@ will then use the results as a foundation of our evaluation. clusterVars
 indicated the clusters to use in each batch. logFCThresh is the cutoff log2FC.
 
 ```{r findDEG}
-deg_df <- findDEG(ifnb_list, ifnb_split_corrected, clusterVars = c('seurat_clusters','seurat_clusters'), logFCThresh=1.5)
+deg_df <- findDEG(ifnb_split, ifnb_split_corrected, clusterVars = c('seurat_clusters','seurat_clusters'), logFCThresh=2)
 head(deg_df)
 ```
 Differentially expressed genes are measured in log2(fold change). For example, 

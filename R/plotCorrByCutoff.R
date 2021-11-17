@@ -8,6 +8,10 @@
 #' @return ggplot with the spearman and pearson correlation estimates and
 #'         for each cluster at each cutoff.
 #'
+#' @examples
+#' data("deg_df")
+#' plotCorrByCutoff(deg_df, 50)
+#'
 #' @export
 plotCorrByCutoff <- function(DEG_df, granularity, estimate="pearson", byCluster=T) {
 
@@ -52,27 +56,27 @@ plotCorrByCutoff <- function(DEG_df, granularity, estimate="pearson", byCluster=
 
         if (byCluster == FALSE) {
                 avg_outlier_scores <- DEG_outlier_scores %>%
-                        dplyr::group_by(cutoff, batch) %>%
-                        dplyr::summarise(mean_rho = mean(active_estimate))
+                        dplyr::group_by(.data$cutoff, .data$batch) %>%
+                        dplyr::summarise(mean_rho = mean(.data$active_estimate))
 
-                plt <- ggplot(avg_outlier_scores, aes(x = cutoff,
-                                                      y = mean_rho,
-                                                      colour = batch))
-                plt <- plt + geom_line()
-                plt <- plt + scale_y_continuous(name="spearman rho",
+                plt <- ggplot2::ggplot(avg_outlier_scores, ggplot2::aes(x = avg_outlier_scores$cutoff,
+                                                      y = avg_outlier_scores$mean_rho,
+                                                      colour = avg_outlier_scores$batch))
+                plt <- plt + ggplot2::geom_line()
+                plt <- plt + ggplot2::scale_y_continuous(name="spearman rho",
                                                 limit=c(-1, 1))
-                plt <- plt + labs(title="Average Pre/Post Correction Correlation By # of DEGs Considered")
+                plt <- plt + ggplot2::labs(title="Average Pre/Post Correction Correlation By # of DEGs Considered")
         }
         else {
-                plt <- ggplot(DEG_outlier_scores, aes(x = cutoff,
-                                                      y = active_estimate,
-                                                      colour = cluster,
-                                                      linetype = batch))
-                plt <- plt + geom_line()
-                plt <- plt + scale_y_continuous(name="spearman rho",
+                plt <- ggplot2::ggplot(DEG_outlier_scores, ggplot2::aes(x = avg_outlier_scores$cutoff,
+                                                      y = avg_outlier_scores$active_estimate,
+                                                      colour = avg_outlier_scores$cluster,
+                                                      linetype = avg_outlier_scores$batch))
+                plt <- plt + ggplot2::geom_line()
+                plt <- plt + ggplot2::scale_y_continuous(name="spearman rho",
                                                 limit=c(-1, 1))
-                plt <- plt + facet_wrap( ~ cluster)
-                plt <- plt + labs(title="Pre/Post Correction Correlation By # of DEGs Considered")
+                plt <- plt + ggplot2::facet_wrap( ~ avg_outlier_scores$cluster)
+                plt <- plt + ggplot2::labs(title="Pre/Post Correction Correlation By # of DEGs Considered")
         }
 
         return(plt)

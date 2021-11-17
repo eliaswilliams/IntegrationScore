@@ -7,6 +7,13 @@
 #' @param nFeatures number of top variable genes to use
 #'
 #' @return ggplot object
+#'
+#' @examples
+#' library(Seurat)
+#' data("ifbn_split")
+#' data("ifnb_split_corrected")
+#' plotUMAP(ifbn_split, ifnb_split_corrected, colorBy="stim")
+#'
 #' @export
 plotUMAP <- function(srtObjPre, srtObjPost, colorBy,  nFeatures=2000, nPC=20) {
 
@@ -35,8 +42,8 @@ plotUMAP <- function(srtObjPre, srtObjPost, colorBy,  nFeatures=2000, nPC=20) {
         Seurat::Idents(srtObjList[[1]]) <- colorBy
 
         # generate plots and return
-        uncorrected_umap <- Seurat::DimPlot(srtObjList[[1]], reduction='umap') + labs(title="No Batch Correction")
-        corrected_umap <- Seurat::DimPlot(srtObjList[[2]], reduction='umap') + labs(title="After Batch Correction")
+        uncorrected_umap <- Seurat::DimPlot(srtObjList[[1]], reduction='umap') + ggplot2::labs(title="No Batch Correction")
+        corrected_umap <- Seurat::DimPlot(srtObjList[[2]], reduction='umap') + ggplot2::labs(title="After Batch Correction")
         umap_plot <- uncorrected_umap + corrected_umap
 
         return(umap_plot)

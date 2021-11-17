@@ -8,13 +8,17 @@
 #' @return data frame with the spearman and pearson correlation estimates and
 #'         p values for each cluster.
 #'
+#' @examples
+#' data("deg_df")
+#' corrDEG(deg_df)
+#'
 #' @export
 corrDEG <- function(DEG_df) {
 
         batchNames = unique(DEG_df$batch)
 
-        batch1DEG = dplyr::filter(DEG_df, batch==batchNames[1])
-        batch2DEG = dplyr::filter(DEG_df, batch==batchNames[2])
+        batch1DEG = dplyr::filter(DEG_df, DEG_df$batch==batchNames[1])
+        batch2DEG = dplyr::filter(DEG_df, DEG_df$batch==batchNames[2])
 
         batch1Clusters <- as.character(unique(batch1DEG$cluster))
         batch2Clusters <- as.character(unique(batch2DEG$cluster))

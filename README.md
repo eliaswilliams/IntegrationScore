@@ -17,7 +17,7 @@ When analyzing a data set with potential batch effects, one must be
 careful to first remove as much of this variation as possible. The
 process of removing batch effects is referred to as batch correction. If
 proper batch correction is not applied then the results of any
-downstream analyses performed may be useless, since there is now way for
+downstream analyses performed may be useless, since there is no way for
 these downstream tasks to distinguish between real biological signal and
 batch-effect-related noise.
 

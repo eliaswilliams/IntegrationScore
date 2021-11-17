@@ -4,7 +4,7 @@
 \alias{plotCorrByCutoff}
 \title{Runs corrDEG with different cutoff levels for log 2 FC then plots the results.}
 \usage{
-plotCorrByCutoff(DEG_df, granularity, estimate = "pearson", average = T)
+plotCorrByCutoff(DEG_df, granularity, estimate = "pearson", byCluster = T)
 }
 \arguments{
 \item{DEG_df}{data frame with DEG information for each batch pre and
@@ -14,7 +14,7 @@ post correction, output from findDEG}
 
 \item{estimate}{test to plot, either pearson or spearman}
 
-\item{average}{whether or not to aggregate scores by averaging over cluster}
+\item{byCluster}{whether or not to aggregate scores by averaging over cluster}
 }
 \value{
 ggplot with the spearman and pearson correlation estimates and
@@ -22,4 +22,9 @@ ggplot with the spearman and pearson correlation estimates and
 }
 \description{
 Runs corrDEG with different cutoff levels for log 2 FC then plots the results.
+}
+\examples{
+data("deg_df")
+plotCorrByCutoff(deg_df, 50)
+
 }

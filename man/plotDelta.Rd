@@ -18,3 +18,8 @@ ggplot object
 \description{
 Plot deltas by cluster of most altered genes under batch correction.
 }
+\examples{
+data("deg_df")
+plotDelta(deg_df, 16)
+
+}

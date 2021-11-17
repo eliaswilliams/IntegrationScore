@@ -15,12 +15,15 @@ Imports:
     stats,
     Seurat,
     kBET (>= 0.99.6),
-    SeuratData (>= 0.2.1)
+    SeuratData (>= 0.2.1),
+    ggpubr
 RoxygenNote: 7.1.2
 Remotes: 
     url::https://github.com/theislab/kBET,
     satijalab/seurat-data
 Suggests: 
     rmarkdown,
-    knitr
+    knitr,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

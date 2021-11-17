@@ -8,7 +8,7 @@ findDEG(
   srtObjPre,
   srtObjPost,
   batchVar,
-  clusterVars,
+  clusterVars = c("seurat_clusters", "seurat_clusters"),
   minPct = 0.15,
   logFCThresh = 1.5
 )
@@ -36,4 +36,11 @@ data frame with DEG information for each batch pre and
 }
 \description{
 Creates a data frame with the DEGs of each batch pre and post correction.
+}
+\examples{
+library(Seurat)
+data("ifbn_split")
+data("ifnb_split_corrected")
+plotUMAP(ifbn_split, ifnb_split_corrected, batchVar="stim")
+
 }

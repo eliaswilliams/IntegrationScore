@@ -18,3 +18,8 @@ data frame with the spearman and pearson correlation estimates and
 Creates a data frame with the spearman and pearson correlation pre/post
 batch correction per cluster.
 }
+\examples{
+data("deg_df")
+corrDEG(deg_df)
+
+}

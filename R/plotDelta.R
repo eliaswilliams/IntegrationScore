@@ -4,30 +4,35 @@
 #'         post correction, output from findDEG
 #' @param nTop integer specifying number of top genes to consider
 #' @return ggplot object
+#'
+#' @examples
+#' data("deg_df")
+#' plotDelta(deg_df, 16)
+#'
 #' @export
 plotDelta <- function(DEG_df, nTop) {
 
         avg_deg_df <- DEG_df %>%
-                dplyr::group_by(gene, batch) %>%
-                dplyr::summarise(mean_abs_delta = mean(abs(delta))) %>%
-                dplyr::arrange(desc(mean_abs_delta))
+                dplyr::group_by(.data$gene, .data$batch) %>%
+                dplyr::summarise(mean_abs_delta = mean(abs(.data$delta))) %>%
+                dplyr::arrange(desc(.data$mean_abs_delta))
 
         top_genes <- paste0(avg_deg_df[1:nTop,]$gene, "_", avg_deg_df[1:nTop,]$batch)
 
-        deg_df$gene_batch <- paste0(DEG_df$gene, "_", DEG_df$batch)
+        DEG_df$gene_batch <- paste0(DEG_df$gene, "_", DEG_df$batch)
 
-        deg_df_sub <- DEG_df %>% dplyr::filter(gene_batch %in% top_genes)
+        deg_df_sub <- DEG_df %>% dplyr::filter(.data$gene_batch %in% top_genes)
 
         plt1 <- ggplot2::ggplot(deg_df_sub, ggplot2::aes(x = cluster, y = delta, fill = cluster))
         plt1 <- plt1 + ggplot2::geom_col()
-        plt1 <- plt1 + ggplot2::facet_wrap(~ gene + batch, ncol = min(nTop %/% 4, 4))
-        plt1 <- plt1 + labs(title="Most Altered Genes Under Correction")
-        plt1 <- plt1 + ggplot2::theme(axis.text.x=element_blank())
+        plt1 <- plt1 + ggplot2::facet_wrap(~ deg_df_sub$gene + deg_df_sub$batch, ncol = min(nTop %/% 4, 4))
+        plt1 <- plt1 + ggplot2::labs(title="Most Altered Genes Under Correction")
+        plt1 <- plt1 + ggplot2::theme(axis.text.x=ggplot2::element_blank())
 
-        plt2 <- ggplot(deg_df, aes(x = delta))
-        plt2 <- plt2 + geom_histogram()
-        plt2 <- plt2 + facet_wrap(~ batch, ncol = 1,scales = 'free_y')
-        plt2 <- plt2 + labs(title="Delta(log2FC) Under Correction By Batch")
+        plt2 <- ggplot2::ggplot(deg_df, ggplot2::aes(x = delta))
+        plt2 <- plt2 + ggplot2::geom_histogram(bins = 30)
+        plt2 <- plt2 + ggplot2::facet_wrap(~ deg_df$batch, ncol = 1, scales = 'free_y')
+        plt2 <- plt2 + ggplot2::labs(title="Delta(log2FC) Under Correction By Batch")
 
-        return(plt2 + plt1)
+        return(ggpubr::ggarrange(plt2 + plt1, ncol = 2))
 }
