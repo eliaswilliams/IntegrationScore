@@ -34,5 +34,5 @@ plotDelta <- function(DEG_df, nTop) {
         plt2 <- plt2 + ggplot2::facet_wrap(~ deg_df$batch, ncol = 1, scales = 'free_y')
         plt2 <- plt2 + ggplot2::labs(title="Delta(log2FC) Under Correction By Batch")
 
-        return(ggpubr::ggarrange(plt2 + plt1, ncol = 2))
+        return(ggpubr::ggarrange(plt2, plt1, ncol = 2))
 }

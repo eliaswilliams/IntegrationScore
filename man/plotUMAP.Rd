@@ -25,8 +25,8 @@ Plot UMAPs of pre and post correction.
 }
 \examples{
 library(Seurat)
-data("ifbn_split")
+data("ifnb_split")
 data("ifnb_split_corrected")
-plotUMAP(ifbn_split, ifnb_split_corrected, colorBy="stim")
+plotUMAP(ifnb_split, ifnb_split_corrected, colorBy="stim")
 
 }
