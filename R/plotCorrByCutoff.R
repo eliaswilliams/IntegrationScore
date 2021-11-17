@@ -68,14 +68,14 @@ plotCorrByCutoff <- function(DEG_df, granularity, estimate="pearson", byCluster=
                 plt <- plt + ggplot2::labs(title="Average Pre/Post Correction Correlation By # of DEGs Considered")
         }
         else {
-                plt <- ggplot2::ggplot(DEG_outlier_scores, ggplot2::aes(x = avg_outlier_scores$cutoff,
-                                                      y = avg_outlier_scores$active_estimate,
-                                                      colour = avg_outlier_scores$cluster,
-                                                      linetype = avg_outlier_scores$batch))
+                plt <- ggplot2::ggplot(DEG_outlier_scores, ggplot2::aes(x = cutoff,
+                                                      y = active_estimate,
+                                                      colour = cluster,
+                                                      linetype = batch))
                 plt <- plt + ggplot2::geom_line()
                 plt <- plt + ggplot2::scale_y_continuous(name="spearman rho",
                                                 limit=c(-1, 1))
-                plt <- plt + ggplot2::facet_wrap( ~ avg_outlier_scores$cluster)
+                plt <- plt + ggplot2::facet_wrap( ~ cluster)
                 plt <- plt + ggplot2::labs(title="Pre/Post Correction Correlation By # of DEGs Considered")
         }
 
