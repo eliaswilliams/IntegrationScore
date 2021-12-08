@@ -1,6 +1,6 @@
 library(shiny)
-source("../../R/plotCorrByCutoff.R")
-load("../../data/deg_df.rda")
+#source("../../R/plotCorrByCutoff.R")
+#load("../../data/deg_df.rda")
 
 ui <- fluidPage(
         titlePanel("Plot Correlation by Cut Off"),
