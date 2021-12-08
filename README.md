@@ -57,9 +57,12 @@ require("devtools")
 #> Loading required package: devtools
 #> Loading required package: usethis
 devtools::install_github("eliaswilliams/IntegrationScore")
-#> Skipping install of 'IntegrationScore' from a github remote, the SHA1 (b3c36056) has not changed since last install.
+#> Skipping install of 'IntegrationScore' from a github remote, the SHA1 (145b726f) has not changed since last install.
 #>   Use `force = TRUE` to force installation
 library("IntegrationScore")
+#> Registered S3 method overwritten by 'spatstat.geom':
+#>   method     from
+#>   print.boxx cli
 ```
 
 To run the shinyApp:
@@ -72,9 +75,10 @@ To run the shinyApp:
 
 ``` r
 ls("package:IntegrationScore")
-#> [1] "corrDEG"              "deg_df"               "findDEG"             
-#> [4] "ifnb_split"           "ifnb_split_corrected" "plotCorrByCutoff"    
-#> [7] "plotDelta"            "plotUMAP"
+#>  [1] "corrDEG"              "deg_df"               "findDEG"             
+#>  [4] "ifnb_corrected"       "ifnb_split"           "ifnb_split_corrected"
+#>  [7] "plotCorrByCutoff"     "plotDelta"            "plotUMAP"            
+#> [10] "runIntegrationScore"
 ```
 
 This package contains 5 functions available to users. It is recommended
@@ -86,6 +90,8 @@ returns a plot that illustrates change in log2FC (delta) under the
 correction algorithm. plotCorrByCutoff shows how the correlation of the
 DEGs changes as you consider more or less DEGs. And finally, plotUMAP
 plots the UMAP reduction pre and post batch correction.
+
+![alt text here](inst/extdata/overview.png)
 
 ``` r
 browseVignettes("IntegrationScore")

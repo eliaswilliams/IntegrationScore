@@ -86,6 +86,9 @@ in log2FC (delta) under the correction algorithm. plotCorrByCutoff shows how the
 correlation of the DEGs changes as you consider more or less DEGs. And finally, 
 plotUMAP plots the UMAP reduction pre and post batch correction.
 
+![alt text here](inst/extdata/overview.png)
+
+
 ``` {r}
 browseVignettes("IntegrationScore")
 ```
