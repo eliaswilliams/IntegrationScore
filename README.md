@@ -65,11 +65,7 @@ library("IntegrationScore")
 #>   print.boxx cli
 ```
 
-To run the shinyApp:
-
-``` r
-#runIntegrationScore()
-```
+To run the shinyApp: run `runIntegrationScore()`.
 
 ## Overview
 
@@ -114,6 +110,10 @@ assessing single-cell RNA-seq batch correction. Nat Methods 16, 43–49.
 
 Hoffman, P. (2021) Satija Lab. Introduction to scRNA-seq integration.
 <https://satijalab.org/seurat/articles/integration_introduction.html>
+
+R Core Team (2021). R: A language and environment for statistical
+computing. R Foundation for Statistical Computing, Vienna, Austria.
+<https://www.R-project.org/>
 
 Satija, R. (2021) Satija Lab. Seurat Data R Package.
 <https://github.com/satijalab/seurat-data>
