@@ -3,19 +3,21 @@ Type: Package
 Title: Toolbox For Evaluating Batch Correction Methods
 Version: 0.1.0
 Author: Elias Williams
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: Elias Williams <elias.williams@mail.utoronto.ca>
 Description: The objective of this R package is to allow researchers working with scRNA-seq data to compare the effectiveness of batch correction methods.
 License: MIT + file LICENSE
 Depends: R (>= 3.5.0)
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: xz
 Imports: 
     dplyr,
     ggplot2,
     stats,
     Seurat,
     SeuratData (>= 0.2.1),
-    ggpubr
+    ggpubr,
+    shiny
 RoxygenNote: 7.1.2
 Remotes: 
     satijalab/seurat-data

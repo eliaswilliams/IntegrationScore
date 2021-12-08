@@ -37,7 +37,7 @@ a sample of neighborhoods to the global distribution of batch labels.
 The objective of IntegrationScore is to allow researchers working with
 scRNA-seq data to compare the effectiveness of batch correction methods
 using a different measure. That measure being: in a given batch, are the
-differentiated expressed genes (DEGs) between clusters somewhat
+differentially expressed genes (DEGs) between clusters somewhat
 invariant under the batch correction method? A measure such as this
 gives researchers an idea of which genes were significantly changed by
 the correction algorithm. Additionally, this measure can be used to get
@@ -54,21 +54,32 @@ You can install the development version of IntegrationScore from
 
 ``` r
 require("devtools")
+#> Loading required package: devtools
+#> Loading required package: usethis
 devtools::install_github("eliaswilliams/IntegrationScore")
+#> Skipping install of 'IntegrationScore' from a github remote, the SHA1 (b3c36056) has not changed since last install.
+#>   Use `force = TRUE` to force installation
 library("IntegrationScore")
 ```
 
-To run the shinyApp: Under construction
+To run the shinyApp:
+
+``` r
+#runIntegrationScore()
+```
 
 ## Overview
 
 ``` r
 ls("package:IntegrationScore")
+#> [1] "corrDEG"              "deg_df"               "findDEG"             
+#> [4] "ifnb_split"           "ifnb_split_corrected" "plotCorrByCutoff"    
+#> [7] "plotDelta"            "plotUMAP"
 ```
 
 This package contains 5 functions available to users. It is recommended
-that users start by calling findDEG which returns a dataframe of
-differential expressed genes (DEGs) in your Seurat objects. corrDEG is
+that users start by calling findDEG which returns a data frame of
+differentially expressed genes (DEGs) in your Seurat objects. corrDEG is
 then used to calculate the correlation of the DEGs under batch
 correction. The remaining three functions are for plotting. plotDelta
 returns a plot that illustrates change in log2FC (delta) under the
@@ -78,9 +89,8 @@ plots the UMAP reduction pre and post batch correction.
 
 ``` r
 browseVignettes("IntegrationScore")
+#> No vignettes found by browseVignettes("IntegrationScore")
 ```
-
-![overview image](overview.png)
 
 ## Contributions
 

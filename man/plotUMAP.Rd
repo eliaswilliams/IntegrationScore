@@ -9,7 +9,7 @@ plotUMAP(srtObjPre, srtObjPost, colorBy, nFeatures = 2000, nPC = 20)
 \arguments{
 \item{srtObjPre}{Seurat object(s) of the uncorrected data}
 
-\item{srtObjPost}{Seurat object(s) of the corrected data}
+\item{srtObjPost}{Seurat object of the corrected data}
 
 \item{colorBy}{variable to color plot by}
 
@@ -26,7 +26,7 @@ Plot UMAPs of pre and post correction.
 \examples{
 library(Seurat)
 data("ifnb_split")
-data("ifnb_split_corrected")
-plotUMAP(ifnb_split, ifnb_split_corrected, colorBy="stim")
+data("ifnb_corrected")
+plotUMAP(ifnb_split, ifnb_corrected, colorBy="stim")
 
 }

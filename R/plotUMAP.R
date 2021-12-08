@@ -1,7 +1,7 @@
 #' Plot UMAPs of pre and post correction.
 #'
 #' @param srtObjPre Seurat object(s) of the uncorrected data
-#' @param srtObjPost Seurat object(s) of the corrected data
+#' @param srtObjPost Seurat object of the corrected data
 #' @param colorBy variable to color plot by
 #' @param nPC number of principle components to use
 #' @param nFeatures number of top variable genes to use
@@ -11,10 +11,12 @@
 #' @examples
 #' library(Seurat)
 #' data("ifnb_split")
-#' data("ifnb_split_corrected")
-#' plotUMAP(ifnb_split, ifnb_split_corrected, colorBy="stim")
+#' data("ifnb_corrected")
+#' plotUMAP(ifnb_split, ifnb_corrected, colorBy="stim")
 #'
 #' @export
+#' @import Seurat
+#' @import ggplot2
 plotUMAP <- function(srtObjPre, srtObjPost, colorBy,  nFeatures=2000, nPC=20) {
 
         # if Seurat objects are split, join them
@@ -22,13 +24,16 @@ plotUMAP <- function(srtObjPre, srtObjPost, colorBy,  nFeatures=2000, nPC=20) {
                 batchNames <- names(srtObjPre)
                 srtObjPre <- merge(x=srtObjPre[[batchNames[1]]], y=srtObjPre[[batchNames[2]]])
         }
-        if (length(srtObjPost) > 1) {
-                batchNames <- names(srtObjPost)
-                srtObjPost <- merge(x=srtObjPost[[batchNames[1]]], y=srtObjPost[[batchNames[2]]])
-        }
+        # if (length(srtObjPost) > 1) {
+        #         batchNames <- names(srtObjPost)
+        #         srtObjPost <- merge(x=srtObjPost[[batchNames[1]]], y=srtObjPost[[batchNames[2]]])
+        # }
 
         # perform UMAP steps on objects
-        srtObjList = list(srtObjPre, srtObjPost)
+        srtObjPre <- Seurat::NormalizeData(srtObjPre)
+
+        srtObjList <- list(srtObjPre, srtObjPost)
+
         srtObjList <- lapply(X = srtObjList, FUN = function(x) {
                 x <- Seurat::FindVariableFeatures(x, selection.method="vst", nfeatures=nFeatures, verbose = FALSE)
                 x <- Seurat::ScaleData(x, features=Seurat::VariableFeatures(object=x), verbose = FALSE)
@@ -39,7 +44,7 @@ plotUMAP <- function(srtObjPre, srtObjPost, colorBy,  nFeatures=2000, nPC=20) {
 
         # set idents to given colorBy variable
         Seurat::Idents(srtObjList[[1]]) <- colorBy
-        Seurat::Idents(srtObjList[[1]]) <- colorBy
+        Seurat::Idents(srtObjList[[2]]) <- colorBy
 
         # generate plots and return
         uncorrected_umap <- Seurat::DimPlot(srtObjList[[1]], reduction='umap') + ggplot2::labs(title="No Batch Correction")
@@ -48,3 +53,4 @@ plotUMAP <- function(srtObjPre, srtObjPost, colorBy,  nFeatures=2000, nPC=20) {
 
         return(umap_plot)
 }
+# [END]

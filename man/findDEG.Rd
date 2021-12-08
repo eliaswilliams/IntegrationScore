@@ -39,8 +39,8 @@ Creates a data frame with the DEGs of each batch pre and post correction.
 }
 \examples{
 library(Seurat)
-data("ifbn_split")
+data("ifnb_split")
 data("ifnb_split_corrected")
-plotUMAP(ifbn_split, ifnb_split_corrected, batchVar="stim")
+deg_df <- findDEG(ifnb_split, ifnb_split_corrected, clusterVars = c('seurat_clusters','seurat_clusters'), logFCThresh=2)
 
 }

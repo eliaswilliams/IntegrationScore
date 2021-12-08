@@ -18,11 +18,12 @@
 #'
 #' @examples
 #' library(Seurat)
-#' data("ifbn_split")
+#' data("ifnb_split")
 #' data("ifnb_split_corrected")
-#' plotUMAP(ifbn_split, ifnb_split_corrected, batchVar="stim")
+#' deg_df <- findDEG(ifnb_split, ifnb_split_corrected, clusterVars = c('seurat_clusters','seurat_clusters'), logFCThresh=2)
 #'
 #' @export
+#' @import Seurat
 findDEG <- function(srtObjPre, srtObjPost, batchVar, clusterVars=c("seurat_clusters","seurat_clusters"), minPct=0.15, logFCThresh=1.5) {
 
         # if seurat objects are not split, split them by batchVar
@@ -75,14 +76,19 @@ findDEG <- function(srtObjPre, srtObjPost, batchVar, clusterVars=c("seurat_clust
         batch2PostDEG <- Seurat::FindAllMarkers(batch2Post, min.pct=minPct,
                                                logfc.threshold=logFCThresh)#min(logFCThresh, 0.25))
 
-                # build data frame
-        batch1PreDEG <- batch1PreDEG %>% dplyr::select(.data$gene, .data$cluster,
+        # check to see data frames are non empty
+        if (nrow(batch1PreDEG) == 0 | nrow(batch2PreDEG) == 0 | nrow(batch1PostDEG) == 0 | nrow(batch2PostDEG) == 0) {
+                return(-1)
+        }
+
+        # build data frame
+        batch1PreDEG <- dplyr::select(batch1PreDEG, .data$gene, .data$cluster,
                                                avg_log2FC_pre=.data$avg_log2FC)
-        batch2PreDEG <- batch2PreDEG %>% dplyr::select(.data$gene, .data$cluster,
+        batch2PreDEG <- dplyr::select(batch2PreDEG, .data$gene, .data$cluster,
                                                avg_log2FC_pre=.data$avg_log2FC)
-        batch1PostDEG <- batch1PostDEG %>% dplyr::select(.data$gene, .data$cluster,
+        batch1PostDEG <- dplyr::select(batch1PostDEG, .data$gene, .data$cluster,
                                                  avg_log2FC_post=.data$avg_log2FC)
-        batch2PostDEG <- batch2PostDEG %>% dplyr::select(.data$gene, .data$cluster,
+        batch2PostDEG <- dplyr::select(batch2PostDEG, .data$gene, .data$cluster,
                                                  avg_log2FC_post=.data$avg_log2FC)
 
         batch1DEG <- dplyr::inner_join(batch1PreDEG, batch1PostDEG,
@@ -103,3 +109,4 @@ findDEG <- function(srtObjPre, srtObjPost, batchVar, clusterVars=c("seurat_clust
         return(DEG_df)
 
 }
+# [END]

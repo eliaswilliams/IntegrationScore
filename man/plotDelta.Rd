@@ -2,12 +2,13 @@
 % Please edit documentation in R/plotDelta.R
 \name{plotDelta}
 \alias{plotDelta}
-\title{Plot deltas by cluster of most altered genes under batch correction.}
+\title{Plot deltas by cluster of most altered genes under batch correction.
+Plot deltas by cluster of most altered genes under batch correction.}
 \usage{
-plotDelta(DEG_df, nTop)
+plotDelta(deg_df, nTop)
 }
 \arguments{
-\item{DEG_df}{data frame with DEG information for each batch pre and
+\item{deg_df}{data frame with DEG information for each batch pre and
 post correction, output from findDEG}
 
 \item{nTop}{integer specifying number of top genes to consider}
@@ -16,6 +17,7 @@ post correction, output from findDEG}
 ggplot object
 }
 \description{
+Plot deltas by cluster of most altered genes under batch correction.
 Plot deltas by cluster of most altered genes under batch correction.
 }
 \examples{

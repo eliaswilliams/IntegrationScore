@@ -13,6 +13,9 @@
 #' corrDEG(deg_df)
 #'
 #' @export
+#' @import dplyr
+#' @importFrom stats setNames cor.test
+#' @import SeuratData
 corrDEG <- function(DEG_df) {
 
         batchNames = unique(DEG_df$batch)
@@ -68,3 +71,4 @@ corrDEG <- function(DEG_df) {
 
         return(scores_df)
 }
+# [END]

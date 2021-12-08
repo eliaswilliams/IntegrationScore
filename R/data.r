@@ -2,7 +2,10 @@
 #'
 #' @source SeuratData
 #'
+#' @import Seurat
+#'
 #' @format Named List of 2 Seurat objects
+#'
 #' @examples
 #' \dontrun{
 #'  findDEG
@@ -13,12 +16,29 @@
 #'
 #' @source SeuratData
 #'
+#' @import Seurat
+#'
 #' @format Named List of 2 Seurat objects
+#'
 #' @examples
 #' \dontrun{
 #'  findDEG
 #' }
 "ifnb_split_corrected"
+
+#' corrected ifnb Seurat object list
+#'
+#' @source SeuratData
+#'
+#' @import Seurat
+#'
+#' @format Seurat object
+#'
+#' @examples
+#' \dontrun{
+#'  findDEG
+#' }
+"ifnb_corrected"
 
 #' DEG dataframe, output of findDEG(ifnb_split, ifnb_split_corrected, clusterVars = c('seurat_clusters','seurat_clusters'), logFCThresh=2)
 #'
@@ -33,6 +53,7 @@
 #' \item{delta}{avg_log2FC_pre - avg_log2FC_post}
 #' \item{batch}{batch name}
 #' }
+#'
 #' @examples
 #' \dontrun{
 #'  corrDEG

@@ -13,6 +13,9 @@
 #' plotCorrByCutoff(deg_df, 50)
 #'
 #' @export
+#' @import dplyr
+#' @import ggplot2
+#' @importFrom stats na.omit
 plotCorrByCutoff <- function(DEG_df, granularity, estimate="pearson", byCluster=T) {
 
         # create data frame for the results
@@ -39,7 +42,7 @@ plotCorrByCutoff <- function(DEG_df, granularity, estimate="pearson", byCluster=
         }
 
 
-        DEG_outlier_scores <- na.omit(DEG_outlier_scores)
+        DEG_outlier_scores <- stats::na.omit(DEG_outlier_scores)
 
 
         DEG_outlier_scores$spearman_estimate <- as.numeric(DEG_outlier_scores$spearman_estimate)
@@ -68,16 +71,17 @@ plotCorrByCutoff <- function(DEG_df, granularity, estimate="pearson", byCluster=
                 plt <- plt + ggplot2::labs(title="Average Pre/Post Correction Correlation By # of DEGs Considered")
         }
         else {
-                plt <- ggplot2::ggplot(DEG_outlier_scores, ggplot2::aes(x = cutoff,
-                                                      y = active_estimate,
-                                                      colour = cluster,
-                                                      linetype = batch))
+                plt <- ggplot2::ggplot(DEG_outlier_scores, ggplot2::aes(x = DEG_outlier_scores$cutoff,
+                                                      y = DEG_outlier_scores$active_estimate,
+                                                      colour = DEG_outlier_scores$cluster,
+                                                      linetype = DEG_outlier_scores$batch))
                 plt <- plt + ggplot2::geom_line()
                 plt <- plt + ggplot2::scale_y_continuous(name="spearman rho",
                                                 limit=c(-1, 1))
-                plt <- plt + ggplot2::facet_wrap( ~ cluster)
+                plt <- plt + ggplot2::facet_wrap( ~ DEG_outlier_scores$cluster)
                 plt <- plt + ggplot2::labs(title="Pre/Post Correction Correlation By # of DEGs Considered")
         }
 
         return(plt)
 }
+# [END]

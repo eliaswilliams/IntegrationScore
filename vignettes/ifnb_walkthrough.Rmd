@@ -1,13 +1,19 @@
 ---
 title: "ifnb_walkthrough"
-output: rmarkdown::html_vignette
+author: "Elias Williams"
+date: "`r format(Sys.time(), '%d %b %Y')`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: false
 vignette: >
   %\VignetteIndexEntry{ifnb_walkthrough}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, message=FALSE, warning=FALSE}
+library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -15,7 +21,9 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(IntegrationScore)
+require("devtools")
+devtools::install_github("eliaswilliams/IntegrationScore", build_vignettes = FALSE)
+library("IntegrationScore")
 library(SeuratData)
 library(Seurat)
 library(ggplot2)
@@ -34,7 +42,7 @@ https://satijalab.org/seurat/articles/integration_introduction.html
 We will be using the interferon beta treated PBMC data set from Seurat Data. 
 
 
-```{r load the data set}
+```{r load the data set, message=FALSE, warning=FALSE}
 SeuratData::InstallData("ifnb")
 ```
 
@@ -45,7 +53,7 @@ interferon beta (STIM group) the other was not (CTRL group). We begin our
 analysis by first splitting the Seurat object by the "stim" variable, which 
 puts our cells into two groups: "STIM" and "CTRL". These will be our two batches. 
 
-```{r}
+```{r, warning=FALSE, message = FALSE}
 ifnb = subset(x = ifnb, downsample = 10000)
 # split the dataset into a list of two seurat objects (stim and CTRL)
 ifnb_split <- SplitObject(ifnb, split.by = "stim")
@@ -55,7 +63,7 @@ Now we will go through standard scRNA-seq pre-processing functions, culminating
 in clustering. It is important that we cluster each batch independently as we 
 will be comparing each batch to itself in this analysis. 
 
-```{r}
+```{r, warning=FALSE, message = FALSE}
 # cluster each batch independently 
 ifnb_split <- lapply(X = ifnb_split, FUN = function(x) {
         x <- NormalizeData(x)
@@ -76,7 +84,7 @@ levels(ifnb_split$STIM@meta.data[["seurat_clusters"]]) = paste0(levels(ifnb_spli
 Now we will run the built in batch correction method in Seurat v4. These steps 
 were taken directly from their vignette. 
 https://satijalab.org/seurat/articles/integration_introduction.html
-```{r}
+```{r, warning=FALSE, message = FALSE}
 # select features that are repeatedly variable across batches for integration
 features <- SelectIntegrationFeatures(object.list = ifnb_split)
 
@@ -88,9 +96,6 @@ ifnb_corrected <- IntegrateData(anchorset = anchors)
 
 # make sure we are using right assay
 DefaultAssay(ifnb_corrected) <- "integrated"
-
-# split corrected object to mirror uncorrected object
-ifnb_split_corrected <- SplitObject(ifnb_corrected, split.by = "stim")
 ```
 
 # Using IntegrationScore
@@ -102,7 +107,7 @@ data points around in some embedding space. UMAP is an excellent way to show our
 high dimensional gene expression data in two-dimensions. Here we run plotUMAP
 to see a before and after look at our data.
 
-```{r plotUMAP}
+```{r plotUMAP, warning=FALSE, fig.dim = c(7.5, 4)}
 plotUMAP(ifnb_split, ifnb_corrected, colorBy="stim", nFeatures=500, nPC=10)
 ```
 
@@ -115,7 +120,7 @@ clusters. We find the DEGs in both the corrected and uncorrected data sets. We
 will then use the results as a foundation of our evaluation. clusterVars 
 indicated the clusters to use in each batch. logFCThresh is the cutoff log2FC.
 
-```{r findDEG}
+```{r findDEG, warning=FALSE, message = FALSE}
 deg_df <- findDEG(ifnb_split, ifnb_split_corrected, clusterVars = c('seurat_clusters','seurat_clusters'), logFCThresh=2)
 head(deg_df)
 ```
@@ -133,7 +138,7 @@ Here we run plotDelta to see how the change in logFC is distributed across
 batch. We also get to see some of the most changed genes and how their deltas 
 are distrubuted across clusters.
 
-```{r plotDelta}
+```{r plotDelta, warning=FALSE, message=FALSE, fig.dim = c(7.5, 4)}
 plotDelta(deg_df, 16) 
 ```
 
@@ -147,10 +152,32 @@ as the number of top genes (ordered by the pre correction log2FC) we consider
 when calculating the correlation. Try setting byCluster to True to see an even 
 more fine-grained look.
 
-```{r plotCorrByCutoff}
+```{r plotCorrByCutoff, warning=FALSE, message=FALSE, fig.dim = c(7.5, 4)}
 plotCorrByCutoff(deg_df, granularity = 100, estimate = "spearman", byCluster = T)
 ```
 
+## Package References
+
+[Williams, E. (2021) IntegrationScore: Comparison of Effectiveness of Batch Correction methods for  scRNA-seq For BCB410H. Unpublished.](https://github.com/eliaswilliams/IntegrationScore
+
+<br>
+
+## Other References
+
+Büttner, M., Miao, Z., Wolf, F.A. et al. (2019) A test metric for assessing single-cell RNA-seq batch correction. Nat Methods 16, 43–49. https://doi.org/10.1038/s41592-018-0254-1
+
+Hoffman, P. (2021) Satija Lab. Introduction to scRNA-seq integration. https://satijalab.org/seurat/articles/integration_introduction.html
+
+R Core Team (2021). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. https://www.R-project.org/
+
+Satija, R. (2021) Satija Lab. Seurat Data R Package. https://github.com/satijalab/seurat-data
+
+Wickham, H. and Bryan, J. (2019). R Packages (2nd edition). Newton, Massachusetts: O’Reilly Media. https://r-pkgs.org/
 
 
+----
+
+```{r}
+sessionInfo()
+```
 

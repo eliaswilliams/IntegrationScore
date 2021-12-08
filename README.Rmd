@@ -46,7 +46,7 @@ to the global distribution of batch labels.
 
 The objective of IntegrationScore is to allow researchers working with scRNA-seq 
 data to compare the effectiveness of batch correction methods using a different 
-measure. That measure being: in a given batch, are the differentiated expressed 
+measure. That measure being: in a given batch, are the differentially expressed 
 genes (DEGs) between clusters somewhat invariant under the batch correction 
 method? A measure such as this gives researchers an idea of which genes were 
 significantly changed by the correction algorithm. Additionally, this measure 
@@ -60,21 +60,25 @@ IntegrationScore was developed on a Mac using R 4.1.1.
 
 You can install the development version of IntegrationScore from [GitHub](https://github.com/) with:
 
-``` r
+``` {r}
 require("devtools")
 devtools::install_github("eliaswilliams/IntegrationScore")
 library("IntegrationScore")
 ```
 
 To run the shinyApp:
-Under construction
+
+```{r}
+#runIntegrationScore()
+```
+
 
 ## Overview
-``` r
+``` {r}
 ls("package:IntegrationScore")
 ```
 This package contains 5 functions available to users. It is recommended that 
-users start by calling findDEG which returns a dataframe of differential 
+users start by calling findDEG which returns a data frame of differentially 
 expressed genes (DEGs) in your Seurat objects. corrDEG is then used to calculate 
 the correlation of the DEGs under batch correction. The remaining three 
 functions are for plotting. plotDelta returns a plot that illustrates change 
@@ -82,7 +86,7 @@ in log2FC (delta) under the correction algorithm. plotCorrByCutoff shows how the
 correlation of the DEGs changes as you consider more or less DEGs. And finally, 
 plotUMAP plots the UMAP reduction pre and post batch correction.
 
-``` r
+``` {r}
 browseVignettes("IntegrationScore")
 ```
 
